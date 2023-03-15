@@ -71,7 +71,6 @@ export interface Stripe {
   confirmPayment(options: {
     elements: StripeElements;
     confirmParams?: Partial<paymentIntents.ConfirmPaymentData>;
-    onRequestPaymentIntent?: () => any;
     redirect: 'if_required';
   }): Promise<PaymentIntentResult>;
 
@@ -103,7 +102,6 @@ export interface Stripe {
   confirmPayment(options: {
     elements: StripeElements;
     confirmParams: paymentIntents.ConfirmPaymentData;
-    onRequestPaymentIntent?: () => any;
     redirect?: 'always';
   }): Promise<never | {error: StripeError}>;
 
@@ -593,7 +591,9 @@ export interface Stripe {
    *
    * @docs https://stripe.com/docs/js/payment_intents/handle_next_action
    */
-  handleNextAction(clientSecret: string): Promise<PaymentIntentResult>;
+  handleNextAction(options: {
+    clientSecret: string;
+  }): Promise<PaymentIntentResult>;
 
   /**
    * Use `stripe.verifyMicrodepositsForPayment` in the [Accept a Canadian pre-authorized debit payment](https://stripe.com/docs/payments/acss-debit/accept-a-payment) flow
@@ -678,7 +678,6 @@ export interface Stripe {
   confirmSetup(options: {
     elements: StripeElements;
     confirmParams?: Partial<paymentIntents.ConfirmPaymentData>;
-    onRequestSetupIntent?: () => any;
     redirect: 'if_required';
   }): Promise<SetupIntentResult>;
 
@@ -710,7 +709,6 @@ export interface Stripe {
   confirmSetup(options: {
     elements: StripeElements;
     confirmParams: paymentIntents.ConfirmPaymentData;
-    onRequestSetupIntent?: () => any;
     redirect?: 'always';
   }): Promise<never | {error: StripeError}>;
 

@@ -85,6 +85,10 @@ const elements: StripeElements = stripe.elements({
   mode: 'payment',
   currency: 'usd',
   amount: 1099,
+  setupFutureUsage: 'off_session',
+  captureMethod: 'automatic',
+  paymentMethodTypes: ['card'],
+  paymentMethodCreation: 'manual',
   appearance: {
     disableAnimations: false,
     theme: 'night',
@@ -173,10 +177,15 @@ elements.update({
   amount: 1099,
   setup_future_usage: 'off_session',
   capture_method: 'automatic',
+  payment_method_types: ['card'],
 });
 
 const fetchUpdates = async () => {
   const {error} = await elements.fetchUpdates();
+};
+
+const handleSubmit = async () => {
+  const {error} = await elements.submit();
 };
 
 const auBankAccountElement = elements.create('auBankAccount', {});
@@ -2116,6 +2125,10 @@ stripe
   .then(({paymentIntent}: {paymentIntent?: PaymentIntent}) => {});
 
 stripe
+  .handleNextAction({clientSecret: ''})
+  .then(({paymentIntent}: {paymentIntent?: PaymentIntent}) => {});
+
+stripe
   .verifyMicrodepositsForPayment('', {amounts: [32, 45]})
   .then((result: {paymentIntent?: PaymentIntent; error?: StripeError}) => null);
 
@@ -2652,7 +2665,6 @@ stripe
       return_url: '',
     },
     redirect: 'always',
-    onRequestPaymentIntent: () => {},
   })
   .then((res) => {
     if (res.error) {
@@ -2702,7 +2714,6 @@ stripe
     elements,
     redirect: 'if_required',
     confirmParams: {},
-    onRequestPaymentIntent: () => {},
   })
   .then((res) => {
     if (res.error) {
@@ -2756,7 +2767,6 @@ stripe
       return_url: '',
     },
     redirect: 'always',
-    onRequestSetupIntent: () => {},
   })
   .then((res) => {
     if (res.error) {
@@ -2806,7 +2816,6 @@ stripe
     elements,
     redirect: 'if_required',
     confirmParams: {},
-    onRequestSetupIntent: () => {},
   })
   .then((res) => {
     if (res.error) {
