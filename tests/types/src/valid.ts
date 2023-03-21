@@ -175,9 +175,9 @@ elements.update({
   mode: 'payment',
   currency: 'usd',
   amount: 1099,
-  setup_future_usage: 'off_session',
-  capture_method: 'automatic',
-  payment_method_types: ['card'],
+  setupFutureUsage: 'off_session',
+  captureMethod: 'automatic',
+  paymentMethodTypes: ['card'],
 });
 
 const fetchUpdates = async () => {
@@ -201,6 +201,7 @@ const cardElement: StripeCardElement = elements.create('card', {
   hidePostalCode: true,
   iconStyle: 'solid',
   disabled: false,
+  disableLink: false,
 });
 
 elements.create('card', {style: {base: {fontWeight: 500}}});
@@ -284,6 +285,7 @@ const paymentRequestButtonElement = elements.create('paymentRequestButton', {
       theme: 'light',
       height: '21px',
       type: 'donate',
+      buttonSpacing: '8px',
     },
   },
   paymentRequest: stripe.paymentRequest({
@@ -294,6 +296,7 @@ const paymentRequestButtonElement = elements.create('paymentRequestButton', {
     requestPayerEmail: true,
     disableWallets: ['googlePay', 'link'],
   }),
+  disableMultipleButtons: false,
 });
 
 const retrievedPaymentRequestButtonElement: StripePaymentRequestButtonElement | null = elements.getElement(
@@ -1389,6 +1392,28 @@ stripe
 
 stripe
   .confirmBancontactPayment('')
+  .then((result: {paymentIntent?: PaymentIntent; error?: StripeError}) => null);
+
+stripe
+  .confirmBlikPayment(
+    '',
+    {
+      payment_method: {
+        blik: {},
+        billing_details: {
+          email: 'jenny@example.com',
+        },
+      },
+      payment_method_options: {
+        blik: {
+          code: '123456',
+        },
+      },
+    },
+    {
+      handleActions: false,
+    }
+  )
   .then((result: {paymentIntent?: PaymentIntent; error?: StripeError}) => null);
 
 stripe
